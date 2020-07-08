@@ -61,7 +61,7 @@ int main() {
     const double MS_PER_MPH = 0.447; 
     const double TIME_STEP = 0.02;
     // we should not change 2 lanes at one time or change our mind after decided to change lane.
-    // COOL_DOWN will decrease by 1 each time (until 0), and reset to maximum whenever we change lane.
+    // cool_down will decrease by 1 each time (until 0), and reset to maximum whenever we change lane.
     // Thus, it will keep lane value unchanged for some time, OOL_DOWN = 75 is roughly 75*(0.02*4)=6 seconds
     const int COOL_DOWN_MAX = 75;
     static int cool_down = COOL_DOWN_MAX; 
@@ -139,8 +139,11 @@ int main() {
 
           if (too_close){
             ref_vel -= 0.22;
+            /////////////////////////////////////
+            // Start of lane change code block //
+            /////////////////////////////////////
             // It's appealing to change lane when there is a car ahead of us.
-            // If we are currently changing lane (i.e., not close enough to the center of lane to change), skip the process
+            // If we are currently changing lane (i.e., cool_down has not decreased to 0), skip the process
             // Here I'd like to change lane if meeting all the following criteria:
             // 1, ref_vel > LANE_CHANGE_VEL, so that the car can swiftly shift lane
             // 2, there is at least AHEAD_BUFFER (meters ahead of the ref point) in the available lane
@@ -221,6 +224,10 @@ int main() {
                 cool_down = COOL_DOWN_MAX;
               }
             }// end if ref_vel>LANE_CHANGE_VEL
+            ///////////////////////////////////
+            // End of lane change code block //
+            ///////////////////////////////////
+
           }// end if too_close
           else if (ref_vel<49.5){
             ref_vel += 0.22;
